@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  dev:
+    build:
+      context: ./
+      args:
+        DEBUG: 1
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    tty: true
+  app:
+    build:
+      context: ./
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    command:
+      - /bin/sh
+      - -c
+      - |
+        go build -o ./main .
+        ./main
+    tty: true
