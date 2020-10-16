@@ -7,6 +7,6 @@ import (
 
 func webRoutes(router *gin.Engine)  {
 
-
+	router.GET("/", Index)
 	router.GET("ping", Ping)
 }

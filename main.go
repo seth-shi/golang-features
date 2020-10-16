@@ -18,6 +18,8 @@ func init()  {
 func main() {
 
 	router := routes.RegisterRoutes()
+	router.Static("/assets", "./assets")
+	router.LoadHTMLGlob("views/*")
 
 	router.Run("0.0.0.0:" + os.Getenv("SERVE_PORT"))
 }
