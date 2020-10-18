@@ -7,5 +7,5 @@ import (
 
 func Index(c *gin.Context) {
 
-	c.HTML(http.StatusOK, "index.html", gin.H{});
+	c.HTML(http.StatusOK, "index.html", gin.H{})
 }

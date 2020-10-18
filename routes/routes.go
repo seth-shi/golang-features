@@ -7,6 +7,7 @@ func RegisterRoutes() *gin.Engine {
 	var router = gin.Default()
 
 	webRoutes(router)
+	adminRoutes(router)
 
 	return router
 }
