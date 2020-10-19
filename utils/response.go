@@ -5,11 +5,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Flashes(c *gin.Context) (string, bool) {
+func Flashes(c *gin.Context,vars... string) (string, bool) {
 
 	session := sessions.Default(c)
 
-	flashes := session.Flashes()
+	var flashes []interface{}
+	if len(vars) > 0 {
+		flashes = session.Flashes(vars[0])
+	} else {
+		flashes = session.Flashes()
+	}
+
+
 	if len(flashes) == 0 {
 		return "", false
 	}
