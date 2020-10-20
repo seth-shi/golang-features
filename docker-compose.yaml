@@ -1,5 +1,10 @@
 version: '3'
 
+
+networks:
+  net:
+    driver: bridge
+
 services:
   dev:
     build:
@@ -9,6 +14,10 @@ services:
     volumes:
       - ./:/var/www
     working_dir: /var/www
+    networks:
+      - net
+    depends_on:
+      - elasticsearch
     ports:
       - ${SERVE_PORT}:${SERVE_PORT}
     tty: true
@@ -20,6 +29,8 @@ services:
     working_dir: /var/www
     ports:
       - ${SERVE_PORT}:${SERVE_PORT}
+    networks:
+      - net
     depends_on:
       - elasticsearch
     restart: on-failure
@@ -39,6 +50,8 @@ services:
       - bootstrap.memory_lock=true
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - net
     ulimits:
       memlock:
         soft: -1
