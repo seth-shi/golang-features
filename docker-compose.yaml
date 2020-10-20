@@ -3,7 +3,7 @@ version: '3'
 services:
   dev:
     build:
-      context: ./
+      context: ./docker/app
       args:
         DEBUG: 1
     volumes:
@@ -14,7 +14,7 @@ services:
     tty: true
   app:
     build:
-      context: ./
+      context: ./docker/app
     volumes:
       - ./:/var/www
     working_dir: /var/www
@@ -27,3 +27,18 @@ services:
         go build -o ./main .
         ./main
     tty: true
+  elasticsearch:
+    build:
+      context: ./docker/elasticsearch
+    volumes:
+      - ./data:/usr/share/elasticsearch/data
+    environment:
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"

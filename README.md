@@ -6,6 +6,7 @@
 * 克隆代码
 * `git clone https://github.com/seth-shi/golang-features.git && cd golang-features`
 * 复制`.env.example`为`.env`按需配置
+* 允许目录`/data`读写权限(`Elasticsearch`数据目录)
 * `docker-compose up -d app`
 
 ****
