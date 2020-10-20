@@ -4,12 +4,19 @@ import (
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"golang-functions/enums"
 	"golang-functions/utils"
 	"net/http"
 	"os"
 )
 
 func AdminLogin(c *gin.Context) {
+
+	session := sessions.Default(c)
+	if session.Get(enums.SessionAdminName) != nil {
+		c.Redirect(http.StatusFound, "/admin")
+		return
+	}
 
 	h := gin.H{}
 	h["_flash"], h["has_flash"] = utils.Flashes(c)
@@ -41,12 +48,12 @@ func HandleAdminLogin(c *gin.Context) {
 		return
 	}
 
-	session.Set("admin_name", os.Getenv("ADMIN_USERNAME"))
+	session.Set(enums.SessionAdminName, os.Getenv("ADMIN_USERNAME"))
 	c.Redirect(http.StatusFound, "/admin")
 }
 
 func AdminIndex(c *gin.Context) {
 
-	fmt.Println(sessions.Default(c).Get("admin_name"))
+	fmt.Println(sessions.Default(c).Get(enums.SessionAdminName))
 	c.HTML(http.StatusOK, "admin.index.html", gin.H{})
 }
