@@ -6,18 +6,20 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"golang-functions/utils"
+	"time"
 )
 
 type Feature struct {
 	Id          string
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Code        string `json:"code"`
+	Title       string `mapstructure:"title"`
+	Description string `mapstructure:"description"`
+	Code        string `mapstructure:"code"`
 
-	ViewCount int `json:"view_count"`
+	ViewCount int `mapstructure:"view_count"`
 
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	CreatedAt time.Time `mapstructure:"created_at"`
+	UpdatedAt time.Time `mapstructure:"updated_at"`
 }
 
 func (f *Feature) IndexName() string {
@@ -64,7 +66,7 @@ func (f *Feature) Mapping() string {
 }`
 }
 
-func (f *Feature) Search(offset, limit int) ([]interface{}, error) {
+func (f *Feature) Search(offset, limit int) (models []*Feature, count int, err error) {
 
 	var buf bytes.Buffer
 
@@ -75,8 +77,8 @@ func (f *Feature) Search(offset, limit int) ([]interface{}, error) {
 			},
 		},
 	}
-	if err := json.NewEncoder(&buf).Encode(query); err != nil {
-		return nil, err
+	if err = json.NewEncoder(&buf).Encode(query); err != nil {
+		return
 	}
 
 	// Perform the search request.
@@ -90,46 +92,46 @@ func (f *Feature) Search(offset, limit int) ([]interface{}, error) {
 		es.Search.WithPretty(),
 	)
 	if err != nil {
-		return nil, err
+		return
 	}
 	defer res.Body.Close()
 
 	if res.IsError() {
 		var e map[string]interface{}
-		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
-			return nil, err
+		if err = json.NewDecoder(res.Body).Decode(&e); err != nil {
+			return
 		} else {
 			// Print the response status and error information.
-			return nil, errors.New(fmt.Sprintf("[%s] %s: %s",
+			err = errors.New(fmt.Sprintf("[%s] %s: %s",
 				res.Status(),
 				e["error"].(map[string]interface{})["type"],
 				e["error"].(map[string]interface{})["reason"],
 			))
+			return
 		}
 	}
 
 	var r map[string]interface{}
-	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		return nil, err
+	if err = json.NewDecoder(res.Body).Decode(&r); err != nil {
+		return
 	}
 
 	// Print the response status, number of results, and request duration.
-	//hits := int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
+	count = int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
 
-	//var models []*Feature
-	//for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
-	//
-	//	source := hit.(map[string]interface{})["source"].(map[string]interface{})
-	//
-	//	f := &Feature{
-	//		Id:    hit.(map[string]interface{})["_id"].(string),
-	//		Title: source["title"].(string),
-	//		Description: source["description"].(string),
-	//	}
-	//
-	//	// hit.(map[string]interface{})["_id"]
-	//	log.Printf(" * ID=%s\n", hit.(map[string]interface{}))
-	//}
+	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
 
-	return nil, nil
+		source := hit.(map[string]interface{})["_source"].(map[string]interface{})
+		var f Feature
+		err := utils.Decode(source, &f)
+		if err != nil {
+			continue
+		}
+		f.Id = hit.(map[string]interface{})["_id"].(string)
+
+		models = append(models, &f)
+	}
+
+
+	return
 }

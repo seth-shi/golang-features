@@ -21,10 +21,6 @@ func init() {
 
 func main() {
 
-
-	m := &models.Feature{}
-	m.Search(0, 10)
-	return
 	router := routes.RegisterRoutes()
 
 	router.Run("0.0.0.0:" + os.Getenv("SERVE_PORT"))
