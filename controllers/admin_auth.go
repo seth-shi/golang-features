@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang-functions/enums"
@@ -50,10 +49,4 @@ func HandleAdminLogin(c *gin.Context) {
 
 	session.Set(enums.SessionAdminName, os.Getenv("ADMIN_USERNAME"))
 	c.Redirect(http.StatusFound, "/admin")
-}
-
-func AdminIndex(c *gin.Context) {
-
-	fmt.Println(sessions.Default(c).Get(enums.SessionAdminName))
-	c.HTML(http.StatusOK, "admin.index.html", gin.H{})
 }

@@ -73,16 +73,24 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    <td>
-                                        <button class="btn btn-info">编辑</button>
-                                        <button class="btn btn-danger">删除</button>
-                                    </td>
-                                </tr>
+                                {{ range .features }}
+                                    <tr>
+
+                                        <td>{{ .Id }}</td>
+                                        <td>{{ .Title }}</td>
+                                        <td>{{ .Description }}</td>
+                                        <td>
+                                            <code>
+                                                {{ .Code }}
+                                            </code>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-info">编辑</button>
+                                            <button class="btn btn-danger">删除</button>
+                                        </td>
+
+                                    </tr>
+                                {{ end }}
                                 </tbody>
                             </table>
                         </div>
