@@ -46,7 +46,10 @@
                 <div class="navbar">
                     <div class="navbar-inner">
                         <ul class="breadcrumb">
-                            功能模块
+                            <div>
+                                <div class="pull-left">功能模块</div>
+                                <a href="/features/create" class="btn-link btn-info pull-right">新建</a>
+                            </div>
                         </ul>
                     </div>
                 </div>
@@ -58,7 +61,7 @@
                     <div class="block">
                         <div class="navbar navbar-inner block-header">
                             <div class="muted pull-left">feature list</div>
-                            <div class="pull-right"><span class="badge badge-info">1,234</span>
+                            <div class="pull-right"><span class="badge badge-info">{{ .count }}</span>
                             </div>
                         </div>
                         <div class="block-content collapse in">
@@ -85,8 +88,8 @@
                                             </code>
                                         </td>
                                         <td>
-                                            <button class="btn btn-info">编辑</button>
-                                            <button class="btn btn-danger">删除</button>
+                                            <a href="/admin/features/{{ .Id }}/edit" class="btn btn-info">编辑</a>
+                                            <a class="btn btn-danger">删除</a>
                                         </td>
 
                                     </tr>

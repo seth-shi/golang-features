@@ -16,5 +16,7 @@ func adminRoutes(router *gin.Engine)  {
 	adminRouter.Use(middlewares.AdminAuth)
 	{
 		adminRouter.GET("", AdminIndex)
+		adminRouter.GET("/features/:id/edit", AdminFeatureEdit)
+		adminRouter.PUT("/features/:id", AdminFeatureUpdate)
 	}
 }

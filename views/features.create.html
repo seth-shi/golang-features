@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> feature craete </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/modernforms.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
+    <style>
+        #editor {
+            position: absolute;
+            width: 450px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body class="mdn-bg">
+<div class="modern-forms">
+    <div class="modern-container mc2 mdn-shadow">
+
+
+        {{template "_flash" .}}
+
+        <form action="/admin/login" method="post">
+            <fieldset>
+                <div class="form-group">
+                    <input class="form-control" value="{{ .feature.Title }}" type="text" placeholder="请输入 feature">
+                    <span class="help-block">feature 搜索的关键字, 如<code>md5</code></span>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" rows="3">
+                        {{ .feature.Description }}
+                    </textarea>
+                    <span class="help-block">描述,可用于全文索引</span>
+                </div>
+                <div class="form-group">
+                    <div id="editor">package main
+
+import "fmt"
+
+func main() {
+
+}
+                    </div>
+                </div>
+            </fieldset>
+            <div class="mdn-footer" style="margin-top: 450px;">
+                <button type="submit" class="mdn-button btn-primary">登录</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha512-GZ1RIgZaSc8rnco/8CXfRdCpDxRCphenIiZ2ztLy3XQfCbQUSCuk8IudvNHxkRA3oUg6q0qejgN/qqyG1duv5Q==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-golang.min.js" integrity="sha512-ygPQ0iMxQsv7pPjbXoAqAMarQFtgGP+2oMYYL4gD0Skm5J25i/qsPdHUQbEw6P7C3VyM6gt9XbmFlLN98ojROw==" crossorigin="anonymous"></script>
+<script>
+    var editor = ace.edit("editor", {
+        mode: "ace/mode/golang"
+    });
+    editor.setTheme("ace/theme/twilight");
+   // editor.getValue()
+</script>
+</body>
+</html>

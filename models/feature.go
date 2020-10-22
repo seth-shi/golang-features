@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"golang-functions/utils"
 	"time"
 )
@@ -22,11 +21,11 @@ type Feature struct {
 	UpdatedAt time.Time `mapstructure:"updated_at"`
 }
 
-func (f *Feature) IndexName() string {
+func (f Feature) IndexName() string {
 	return "features"
 }
 
-func (f *Feature) Mapping() string {
+func (f Feature) Mapping() string {
 
 	return `{
 	"settings": {
@@ -66,7 +65,7 @@ func (f *Feature) Mapping() string {
 }`
 }
 
-func (f *Feature) Search(offset, limit int) (models []*Feature, count int, err error) {
+func (f Feature) Search(offset, limit int) (models []*Feature, count int, err error) {
 
 	var buf bytes.Buffer
 
@@ -96,23 +95,8 @@ func (f *Feature) Search(offset, limit int) (models []*Feature, count int, err e
 	}
 	defer res.Body.Close()
 
-	if res.IsError() {
-		var e map[string]interface{}
-		if err = json.NewDecoder(res.Body).Decode(&e); err != nil {
-			return
-		} else {
-			// Print the response status and error information.
-			err = errors.New(fmt.Sprintf("[%s] %s: %s",
-				res.Status(),
-				e["error"].(map[string]interface{})["type"],
-				e["error"].(map[string]interface{})["reason"],
-			))
-			return
-		}
-	}
-
-	var r map[string]interface{}
-	if err = json.NewDecoder(res.Body).Decode(&r); err != nil {
+	r, err := parseEsResponse(res)
+	if err != nil {
 		return
 	}
 
@@ -132,6 +116,37 @@ func (f *Feature) Search(offset, limit int) (models []*Feature, count int, err e
 		models = append(models, &f)
 	}
 
-
 	return
+}
+
+func (f Feature) GetId() string {
+	return f.Id
+}
+
+
+func (f Feature) GetCreatedAt() time.Time {
+	return f.CreatedAt
+}
+
+func (f Feature) Find() (*Feature, error) {
+
+	m, err := Find(f)
+	if err != nil {
+		return nil, err
+	}
+
+	source, ok := m["_source"].(map[string]interface{})
+	if ! ok {
+		return nil, errors.New("no match type")
+	}
+
+	var newF Feature
+	err = utils.Decode(source, &newF)
+	if err != nil {
+		return nil, errors.New("decode fail")
+	}
+
+	newF.Id = f.Id
+
+	return &newF, nil
 }
