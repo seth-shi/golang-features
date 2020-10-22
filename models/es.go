@@ -64,6 +64,10 @@ func parseEsResponse(res *esapi.Response) (map[string]interface{}, error) {
 			return nil, errors.New("no found model")
 		}
 
+		if msg, ok := e["error"].(string); ok {
+			return nil, errors.New(msg)
+		}
+
 		// Print the response status and error information.
 		err = errors.New(fmt.Sprintf("[%s] %s: %s",
 			res.Status(),

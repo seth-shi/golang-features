@@ -37,6 +37,9 @@ button {
 mark {
     background: #86BA68;
 }
+ul li {
+    list-style: none;
+}
 
 /**
  * Typography

@@ -18,7 +18,7 @@ func AdminFeatureEdit(c *gin.Context) {
 		log.Println(err)
 	}
 
-	c.HTML(http.StatusOK, "admin.feature.edit.html", gin.H{
+	c.HTML(http.StatusOK, "admin.features.edit.html", gin.H{
 		"feature": m,
 	})
 }

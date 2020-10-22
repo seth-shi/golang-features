@@ -79,7 +79,6 @@ func Update(model Model) error {
 		&buf,
 	)
 
-	fmt.Printf("res=%s, err %s, \n%s",res, err,m)
 
 	if err != nil {
 		return err
