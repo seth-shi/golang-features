@@ -43,6 +43,7 @@ func FeatureStore(c *gin.Context) {
 	m.Title = form.Title
 	m.Description = form.Description
 	m.Code = form.Code
+	m.Published = false
 	m.ViewCount = 0
 	err := models.Create(m)
 	if err != nil {

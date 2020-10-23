@@ -15,6 +15,7 @@ type Feature struct {
 	Description string `mapstructure:"description"`
 	Code        string `mapstructure:"code"`
 
+	Published bool `mapstructure:"published"`
 	ViewCount int `mapstructure:"view_count"`
 
 	CreatedAt time.Time `mapstructure:"created_at"`
@@ -51,6 +52,9 @@ func (f Feature) Mapping() string {
 			},
 			"view_count": {
 				"type": "integer"
+			},
+			"published": {
+				"type": "boolean"
 			},
 			"created_at": {
 				"type": "date",

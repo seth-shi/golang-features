@@ -2,107 +2,71 @@
 <html lang="en">
 <head>
     <title>Admin Home Page</title>
-
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
-    <link href="/assets/css/jquery.easy-pie-chart.css" rel="stylesheet" media="screen">
-    <link href="/assets/css/styles.css" rel="stylesheet" media="screen">
 </head>
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
+<div class="container">
+
+    <nav class="navbar navbar-default navbar-static-top">
+        <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
         <div class="container-fluid">
-            <a class="brand" href="#">后台</a>
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <li class="active">
-                        <a href="/admin">面板</a>
-                    </li>
-                    <li class="active">
-                        <a href="/">首页</a>
-                    </li>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">{{ .admin }}</a></li>
+                    <li><a target="_blank" href="/">首页</a></li>
+                    <li><a target="_blank" href="/admin/features">features</a></li>
                 </ul>
-            </div>
-
+            </div><!-- /.navbar-collapse -->
         </div>
+    </nav>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Panel heading</div>
+
+        <!-- Table -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>名字</th>
+                <th>描述</th>
+                <th>代码块</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{ range .features }}
+                <tr>
+
+                    <td>{{ .Id }}</td>
+                    <td>{{ .Title }}</td>
+                    <td>{{ .Description }}</td>
+                    <td>
+                        {{ if .Published }}
+                            <span class="label label-success">已发布</span>
+                        {{ else }}
+                            <span class="label label-default">未发布</span>
+                        {{ end }}
+
+                    </td>
+                    <td>
+                        <code>
+                            {{ .Code }}
+                        </code>
+                    </td>
+                    <td>
+                        <a href="/admin/features/{{ .Id }}/edit" class="btn btn-info">编辑</a>
+                        <a class="btn btn-danger">删除</a>
+                    </td>
+
+                </tr>
+            {{ end }}
+            </tbody>
+        </table>
     </div>
 </div>
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span3" id="sidebar">
-            <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                <li class="active">
-                    <a href="/admin"><i class="icon-chevron-right"></i> 面板</a>
-                </li>
-                <li>
-                    <a href="calendar.html"><i class="icon-chevron-right"></i> Calendar</a>
-                </li>
-            </ul>
-        </div>
 
-        <div class="span9" id="content">
-            <div class="row-fluid">
-
-                <div class="navbar">
-                    <div class="navbar-inner">
-                        <ul class="breadcrumb">
-                            <div>
-                                <div class="pull-left">功能模块</div>
-                                <a href="/features/create" class="btn-link btn-info pull-right">新建</a>
-                            </div>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row-fluid">
-                <div class="span12">
-
-                    <div class="block">
-                        <div class="navbar navbar-inner block-header">
-                            <div class="muted pull-left">feature list</div>
-                            <div class="pull-right"><span class="badge badge-info">{{ .count }}</span>
-                            </div>
-                        </div>
-                        <div class="block-content collapse in">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>名字</th>
-                                    <th>描述</th>
-                                    <th>代码块</th>
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {{ range .features }}
-                                    <tr>
-
-                                        <td>{{ .Id }}</td>
-                                        <td>{{ .Title }}</td>
-                                        <td>{{ .Description }}</td>
-                                        <td>
-                                            <code>
-                                                {{ .Code }}
-                                            </code>
-                                        </td>
-                                        <td>
-                                            <a href="/admin/features/{{ .Id }}/edit" class="btn btn-info">编辑</a>
-                                            <a class="btn btn-danger">删除</a>
-                                        </td>
-
-                                    </tr>
-                                {{ end }}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
