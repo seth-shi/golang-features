@@ -16,6 +16,8 @@ func init() {
 		panic("Error loading .env file")
 	}
 
+	// TODO es search
+
 	models.InitEs()
 }
 

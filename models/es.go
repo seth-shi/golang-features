@@ -1,6 +1,8 @@
 package models
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -33,21 +35,26 @@ func InitEs() {
 		panic(err)
 	}
 
-	//// create all index
-	//for _, model := range indexModels {
-	//
-	//	exists, err := es.IndexExists(model.IndexName()).Do(ctx)
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//
-	//	if !exists {
-	//		_, err = es.CreateIndex(model.IndexName()).BodyString(model.Mapping()).Do(ctx)
-	//		if err != nil {
-	//			panic(err)
-	//		}
-	//	}
-	//}
+	// create all index
+	for _, model := range indexModels {
+
+		res, err := es.Indices.Exists([]string{model.IndexName() + "1"})
+		if err != nil {
+			panic(err)
+		}
+
+		if res.StatusCode == 404 {
+			buf := bytes.NewReader([]byte(model.Mapping()))
+			_, err = es.Indices.Create(
+				model.IndexName(),
+				es.Indices.Create.WithContext(context.Background()),
+				es.Indices.Create.WithBody(buf),
+			)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
 }
 
 func parseEsResponse(res *esapi.Response) (map[string]interface{}, error) {
